@@ -1,12 +1,12 @@
-import mqtt,{ MqttClient } from "mqtt";
+import mqtt, { MqttClient } from "mqtt";
 import { SocketService } from "./socketService";
 
 let mqttService: MqttClient;
 
-export const setupMQTT = () => { 
+export const setupMQTT = () => {
     try {
         mqttService = mqtt.connect(process.env.MQTT_BROKER!, { username: 'chon', password: '1234', clientId: 'Web Server' });
-        
+
     } catch (error) {
         console.log(error);
     }
@@ -16,27 +16,32 @@ export const setupMQTT = () => {
     subscribeHumidity();
 }
 
-const subscribeTemperature = () => { 
+const subscribeTemperature = () => {
 
     mqttService.subscribe('+/temperature');
-    mqttService.on('message', async (_t, _m) => { 
+    mqttService.on('message', async (_t, _m) => {
         const topic = String(_t)
         const message = String(_m);
-        // console.log(topic, message);
 
-        SocketService.emit('temperature', { name: 'control', value: message});
+        if (topic.includes('temperature')) {
+            SocketService.emit('temperature', { name: 'control', value: message });
+        }
+
+
     })
 }
 
-const subscribeHumidity = () => { 
-    
+const subscribeHumidity = () => {
+
     mqttService.subscribe('+/humidity');
-    mqttService.on('message', async (_t, _m) => { 
+    mqttService.on('message', async (_t, _m) => {
         const topic = String(_t)
         const message = String(_m);
         // console.log(topic, message);
-        
-        SocketService.emit('humidity', { name: 'control', value: message});
+
+        if (topic.includes('humidity')) {
+             SocketService.emit('humidity', { name: 'control', value: message });
+        }
     })
 }
 
@@ -62,7 +67,7 @@ const subscribeHumidity = () => {
 
 
 //         // subscribe message
-//         this.subscriber();    
+//         this.subscriber();
 //     }
 
 //     public subscriber() {
@@ -71,7 +76,7 @@ const subscribeHumidity = () => {
 
 //         this.mqttClient.on('message', (topic, _message) => {
 
-//             const message = String(_message); 
+//             const message = String(_message);
 
 //             if (topic === this.topic.light_bathroom) {
 
