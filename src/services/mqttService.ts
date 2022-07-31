@@ -1,19 +1,22 @@
 import mqtt, { MqttClient } from "mqtt";
 import { SocketService } from "./socketService";
+const redis = require('redis');
+const redisClient = redis.createClient(); // default port 6379
 
 let mqttService: MqttClient;
 
 export const setupMQTT = () => {
     try {
-        mqttService = mqtt.connect(process.env.MQTT_BROKER!, { username: 'chon', password: '1234', clientId: 'Web Server' });
-
+        mqttService = mqtt.connect(process.env.MQTT_BROKER!, { username: 'chon', password: '1234', clientId: 'Web Server Local' });
+   
     } catch (error) {
         console.log(error);
     }
     console.log('MQTT connected');
 
-    subscribeTemperature();
-    subscribeHumidity();
+    subscribeControl();
+    // subscribeTemperature();
+    // subscribeHumidity();
 }
 
 const subscribeTemperature = () => {
@@ -24,14 +27,33 @@ const subscribeTemperature = () => {
         const message = String(_m);
 
         if (topic.includes('temperature')) {
-            SocketService.emit('temperature', { name: 'control', value: message });
+
+            
+            // redisClient.get(topic, async (error:any, data:any) => { 
+            //     if (error) {
+            //         console.log(error);
+            //     }
+                
+            //     if(data) {
+            //         const old_value = redisClient.get(topic);
+            //         console.log(old_value);
+
+            //         if(old_value != message) {
+            //             SocketService.emit('temperature', { name: 'control', value: message });
+            //         }
+            //     }
+
+            //     redisClient.setex(topic, 5, message);
+            // })
+
+        
         }
-
-
     })
 }
 
 const subscribeHumidity = () => {
+
+    mqttService.publish('test', '1233');
 
     mqttService.subscribe('+/humidity');
     mqttService.on('message', async (_t, _m) => {
@@ -45,6 +67,30 @@ const subscribeHumidity = () => {
     })
 }
 
+const subscribeControl = () => {    
+    
+    mqttService.subscribe('control/#');
+    mqttService.on('message', async (_t, _m) => {
+        const topic = String(_t)
+        const message = String(_m);
+        console.log(topic, message);
+
+        if (topic.includes('battery')) {
+            
+            if (topic.split('/')[2] === 'voltage') {
+                SocketService.emit('battery', { name: 'voltage', value: message });
+            }
+            else if (topic.split('/')[2] === 'current') {
+                SocketService.emit('battery', { name: 'current', value: message });
+            }
+        }
+
+        if (topic.includes('curcuit')) {
+
+            SocketService.emit('curcuit' + topic.split('/')[2], { name: 'voltage', value: message });
+        }
+    })
+}
 // import mqtt, { Client } from "mqtt"
 // import SocketService from "./socketService";
 
