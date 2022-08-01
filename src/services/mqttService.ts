@@ -31,8 +31,8 @@ const subscribeTemperature = () => {
             const topic = String(_t)
             const message = String(_m);
       
-            if (topic.includes('humidity')) {
-                 SocketService.emit('humidity', { name: 'control', value: message });
+            if (topic.includes('temperature')) {
+                 SocketService.emit('temperature', { name: topic.split('/')[0], value: message });
             }
             
             // redisClient.get(topic, async (error:any, data:any) => { 
@@ -67,7 +67,7 @@ const subscribeHumidity = () => {
         const message = String(_m);
   
         if (topic.includes('humidity')) {
-             SocketService.emit('humidity', { name: 'control', value: message });
+             SocketService.emit('humidity', { name: topic.split('/')[0], value: message });
         }
     })
 }
