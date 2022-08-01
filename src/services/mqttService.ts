@@ -15,8 +15,8 @@ export const setupMQTT = () => {
     console.log('MQTT connected');
 
     subscribeControl();
-    // subscribeTemperature();
-    // subscribeHumidity();
+    subscribeTemperature();
+    subscribeHumidity();
 }
 
 const subscribeTemperature = () => {
@@ -28,6 +28,12 @@ const subscribeTemperature = () => {
 
         if (topic.includes('temperature')) {
 
+            const topic = String(_t)
+            const message = String(_m);
+      
+            if (topic.includes('humidity')) {
+                 SocketService.emit('humidity', { name: 'control', value: message });
+            }
             
             // redisClient.get(topic, async (error:any, data:any) => { 
             //     if (error) {
@@ -59,8 +65,7 @@ const subscribeHumidity = () => {
     mqttService.on('message', async (_t, _m) => {
         const topic = String(_t)
         const message = String(_m);
-        // console.log(topic, message);
-
+  
         if (topic.includes('humidity')) {
              SocketService.emit('humidity', { name: 'control', value: message });
         }
@@ -85,9 +90,9 @@ const subscribeControl = () => {
             }
         }
 
-        if (topic.includes('curcuit')) {
+        if (topic.includes('regulator')) {
 
-            SocketService.emit('curcuit' + topic.split('/')[2], { name: 'voltage', value: message });
+            SocketService.emit('regulator' + topic.split('/')[2], { name: 'voltage', value: message });
         }
     })
 }
