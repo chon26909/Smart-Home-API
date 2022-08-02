@@ -30,7 +30,7 @@ export class SocketService {
     }
     static emit(event: string, data: any) {
         if (connection.socket) {
-            return connection.socket.broadcast.emit(event, data);
+            return connection.socket.emit(event, data);
         }
 
     }
