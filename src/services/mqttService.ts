@@ -78,7 +78,6 @@ const subscribeControl = () => {
     mqttService.on('message', async (_t, _m) => {
         const topic = String(_t)
         const message = String(_m);
-        console.log(topic, message);
 
         if (topic.includes('battery')) {
             

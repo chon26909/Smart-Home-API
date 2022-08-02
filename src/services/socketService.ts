@@ -4,16 +4,16 @@ let connection: any = null;
 
 export class SocketService {
 
-    socket: any;
+    sockets: any;
 
     constructor() {
-        this.socket = null;
+        this.sockets = null;
     }
     connect(server: any) {
         const io = new socket.Server(server);
-        io.of('/sensor').on("connection", (socket: Socket) => {
+        this.sockets = io.of('/sensor').on("connection", (socket: Socket): void => {
 
-            this.socket = socket;
+            // this.socket = socket;
 
             const socketID = socket.id;
 
@@ -27,10 +27,12 @@ export class SocketService {
             });
 
         });
+
+        return io;
     }
     static emit(event: string, data: any) {
-        if (connection.socket) {
-            return connection.socket.emit(event, data);
+        if (connection.sockets) {
+            return connection.sockets.emit(event, data);
         }
 
     }
