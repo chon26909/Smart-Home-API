@@ -13,14 +13,14 @@ declare const process: {
     }
 }
 
-const PORT: number = process.env.PORT;
+const PORT: number = Number(process.env.PORT);
 
 const app: Application = express();
 
 const server: Server = http.createServer(app);
 
 server.listen(PORT, () => {
-    console.log('server is running port ', PORT);
+    console.log('server is running port', PORT);
 });
 
 mqttService.setupMQTT();
