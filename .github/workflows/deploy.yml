@@ -26,5 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
     - run: npm run build
+    - run: pm2 delete smarthome-api
+    - run: pm2 start dist/index.js --name=smarthome-api
