@@ -4,8 +4,6 @@
 name: Deploy Smarthome API
 
 on:
-  push:
-    branches: [ "production" ]
   pull_request:
     branches: [ "production" ]
 
