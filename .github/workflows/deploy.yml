@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -27,3 +27,4 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: npm run build
+    - run: pm2 start dist/index.js --name=smarthome-api 
