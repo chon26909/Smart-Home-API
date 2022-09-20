@@ -23,5 +23,8 @@ jobs:
           cache: "npm"
       - run: npm install
       - run: npm run build
-      - run: chmod +x ./deploy.sh
-      - run: bash ./deploy.sh
+      - name: run pm2
+        script: |
+          cd
+          ls -l
+          pm2 restart SmarthomeApi
