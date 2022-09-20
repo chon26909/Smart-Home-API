@@ -25,4 +25,4 @@ jobs:
       - run: npm run build
       - name: run pm2
         script: |
-          pm2 start dist/index.js --name=SmarthomeApi
+          "pm2 start dist/index.js --name=SmarthomeApi"
