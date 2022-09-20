@@ -24,4 +24,4 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: chmod +x ./deploy.sh
-      - run: sh ./deploy.sh
+      - run: bash ./deploy.sh
