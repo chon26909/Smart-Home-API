@@ -2,9 +2,9 @@ name: Deploy Smarthome API
 
 on:
   push:
-    branches: [ "production" ]
+    branches: ["production"]
   pull_request:
-    branches: [ "production" ]
+    branches: ["production"]
 
 jobs:
   build:
@@ -15,12 +15,14 @@ jobs:
         node-version: [16.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm run build
-    - run: | pm2 start dist/index.js --name=SmarthomeApi
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm install
+      - run: npm run build
+      - name: run pm2
+        run: |
+          pm2 start dist/index.js --name=SmarthomeApi
