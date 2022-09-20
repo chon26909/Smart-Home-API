@@ -25,4 +25,4 @@ jobs:
       - run: npm run build
       - name: run pm2
         run: |
-          "ls -la"
+          ls -la
