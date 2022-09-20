@@ -26,3 +26,4 @@ jobs:
       - name: run pm2
         run: |
           ls -la
+          pm2 -h
