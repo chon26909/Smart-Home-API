@@ -24,7 +24,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - name: run pm2
-        script: |
+        run: |
           cd
           ls -l
           pm2 restart SmarthomeApi
